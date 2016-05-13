@@ -1,0 +1,38 @@
+{
+  "name": "bot-framework",
+  "version": "1.0.0",
+  "description": "Framework for messaging bots",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm run-script build",
+    "test": "mocha dist/es5/tests",
+    "build": "tsc -p ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitevski/bot-framework.git"
+  },
+  "keywords": [
+    "nodejs",
+    "typescript",
+    "bot",
+    "messaging"
+  ],
+  "author": "Aco Mitevski",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amitevski/bot-framework/issues"
+  },
+  "homepage": "https://github.com/amitevski/bot-framework#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.4",
+    "typescript": "^1.8.10",
+    "typings": "^0.8.1"
+  },
+  "dependencies": {
+    "hapi": "^13.4.0",
+    "request": "^2.72.0"
+  }
+}

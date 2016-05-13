@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "request": "registry:npm/request#2.69.0+20160428223725",
+    "sinon": "registry:npm/sinon#1.16.0+20160427193336"
+  },
+  "ambientDependencies": {
+    "hapi": "registry:dt/hapi#13.0.0+20160423150146",
+    "mocha": "registry:dt/mocha#2.2.5+20160317120654",
+    "node": "registry:dt/node#4.0.0+20160509154515"
+  },
+  "devDependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160415060238"
+  }
+}
