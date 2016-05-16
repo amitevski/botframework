@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "4"
+  
+  
+before_install:
+  - npm install -g typescript typings
+install:
+  - npm install && typings install
+
+script:
+  - npm test
