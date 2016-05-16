@@ -4,7 +4,7 @@
   "description": "Framework for messaging bots",
   "main": "index.js",
   "scripts": {
-    "prepublish": "npm run-script build",
+    "prepublish": "typings install && npm run-script build",
     "pretest": "npm run-script build",
     "test": "mocha dist/es5/tests",
     "build": "tsc -p ./"

@@ -2,9 +2,11 @@ language: node_js
 node_js:
   - "4"
   
+env:
+  global:
+  - alias typings=./node_modules/.bin/typings
+  - alias tsc=./node_modules/.bin/tsc
   
-before_install:
-  - npm install -g typescript typings
 install:
   - npm install && typings install
 
