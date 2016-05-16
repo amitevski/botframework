@@ -27,7 +27,8 @@ export class FacebookReply implements IBotReply {
           }
         }
       }
-    }
+    };
+    this.fbApi.sendMessage(response);
   }
 }
 
