@@ -1,17 +1,17 @@
 {
   "name": "botframework",
-  "version": "0.1.0",
   "description": "Framework for messaging bots",
   "main": "index.js",
   "scripts": {
     "prepublish": "typings install && npm run-script build",
     "pretest": "npm run-script build",
     "test": "mocha dist/es5/tests",
-    "build": "tsc -p ./"
+    "build": "tsc -p ./",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amitevski/botframework.git"
+    "url": "https://github.com/amitevski/botframework.git"
   },
   "keywords": [
     "nodejs",
@@ -20,7 +20,7 @@
     "messaging"
   ],
   "author": "Aco Mitevski",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/amitevski/botframework/issues"
   },
@@ -30,7 +30,8 @@
     "mocha": "^2.4.5",
     "sinon": "^1.17.4",
     "typescript": "^1.8.10",
-    "typings": "^0.8.1"
+    "typings": "^0.8.1",
+    "semantic-release": "^4.3.5"
   },
   "dependencies": {
     "hapi": "^13.4.0",
