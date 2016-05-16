@@ -61,16 +61,61 @@ export interface IFbCallback {
   entry: IFbMessageEntry[];
 }
 
-export interface IFbResponseAttachmentPayload {
+
+
+// enum
+export class FB_RESPONSE_ATTACHMENT_TYPE {
+  static TEMPLATE: string = 'template';
+  static IMAGE: string = 'image';
+}
+
+// enum
+export class FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE {
+  static GENERIC: string = 'generic';
+  static BUTTON: string = 'button';
+  static RECEIPT: string = 'receipt';
+}
+
+// enum
+// currently very aligned to facebook
+export class BOT_REPLY_LIST_ACTION_TYPE {
+  static LINK: string = 'web_url';
+  static POSTBACK: string = 'postback';
+}
+
+export interface IFbResponseAttachmentPayloadElementAction {
+  title: string;
   url?: string;
-  template_type?: string;
-  elements?: Array<Object>;
-  text?: string;
-  buttons?: Array<string>;
-  // tbd receipt
+  payload?: string;
+  type: BOT_REPLY_LIST_ACTION_TYPE;
+}
+
+export interface IFbResponseAttachmentPayloadElement {
+  title: string;
+  item_url?: string;
+  image_url?: string;
+  subtitle?: string;
+  buttons?: Array<IFbResponseAttachmentPayloadElementAction>;
+}
+export interface IFbResponseAttachmentPayload {
+  template_type: FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE;
+  elements?: Array<IFbResponseAttachmentPayloadElement>; // for generic and receipt template_type
+  text?: string; // for button template_type
+  buttons?: Array<string>; // for button template_type
+  // for receipt
+  recipient_name?: string;
+  order_number?: string;
+  currency?: string;
+  payment_method?: string;
+  timestamp?: string;
+  order_url?: string;
+  // @todo replace object with types
+  address?: Object;
+  summary?: Object; 
+  adjustments?: Object; 
 }
 export interface IFbResponseAttachment {
-  type: string;
+  type: FB_RESPONSE_ATTACHMENT_TYPE;
   payload: IFbResponseAttachmentPayload;
 }
 export interface IFbResponseMessage {
@@ -79,7 +124,7 @@ export interface IFbResponseMessage {
 }
 export interface IFbResponse {
   recipient: IFbMessageUser;
-  message: IFbResponseMessage;
+  message?: IFbResponseMessage;
 }
 
 

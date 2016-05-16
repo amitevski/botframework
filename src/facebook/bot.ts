@@ -1,8 +1,8 @@
-import {IBotController, IBotSettings, IBotUser, ITextMessage} from '../interfaces'
-import {IFbResponse, IFbCallback, IFbMessaging, FB_ATTACHMENT_TYPE, FB_MESSAGE_TYPE} from './interfaces';
+import {IBotController, IBotSettings, IBotUser, ITextMessage, IBotReply, IBotReplyListItem} from '../interfaces'
+import {IFbResponse, IFbCallback, FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE, FB_RESPONSE_ATTACHMENT_TYPE, IFbMessaging, FB_ATTACHMENT_TYPE, FB_MESSAGE_TYPE} from './interfaces';
 import {FacebookApi} from './api';
 
-export class FacebookReply {
+export class FacebookReply implements IBotReply {
   constructor(private recipientId: number, private fbApi: FacebookApi) {}
   text(text: string) {
     let response = {
@@ -12,6 +12,22 @@ export class FacebookReply {
       message: {text}
     };
     this.fbApi.sendMessage(response);
+  }
+  list(elements: Array<IBotReplyListItem>) {
+    let response: IFbResponse = {
+      recipient: {
+        id: this.recipientId
+      },
+      message: {
+        attachment: {
+          type: FB_RESPONSE_ATTACHMENT_TYPE.TEMPLATE,
+          payload: {
+            template_type: FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE.GENERIC,
+            elements
+          }
+        }
+      }
+    }
   }
 }
 

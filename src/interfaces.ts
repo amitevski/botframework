@@ -1,4 +1,4 @@
-import {FacebookReply} from './facebook';
+
 export interface IBotUser {
   id: string;
   email?: string;
@@ -45,9 +45,38 @@ export interface IImageMessage {
   link: IImage;
 }
 
+// enum
+// currently very aligned to facebook
+export class BOT_REPLY_LIST_ACTION_TYPE {
+  static LINK: string = 'web_url';
+  static POSTBACK: string = 'postback';
+}
+export interface IBotReplyListItemAction {
+  title?: string;
+  url?: string;
+  payload?: string;
+  type: BOT_REPLY_LIST_ACTION_TYPE;
+}
+
+export interface IBotReplyListItem {
+  title: string;
+  image_url?: string;
+  subtitle?: string;
+  actions?: Array<IBotReplyListItemAction>; //buttons for facebook
+}
+
+// export interface IBotReplyList {
+//   elements: Array<IBotReplyListItem>;
+// }
+
+export interface IBotReply {
+  text(text: string): void;
+  list(list: Array<IBotReplyListItem>): void;
+}
+
 export interface IBotController {
   newUser?(user: IBotUser): void;
-  textMessage?(textMessage: ITextMessage, reply: FacebookReply): void;
+  textMessage?(textMessage: ITextMessage, reply: IBotReply): void;
   imageMessage?(imageMessage: IImageMessage): void;
   linkMessage?(linkMessage: ILinkMessage): void;
   locationMessage?(locationMessage: ILocationMessage): void;
