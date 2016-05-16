@@ -7,20 +7,20 @@
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true,
     "target": "es5",
-    "outDir": "dist/es5"
+    "outDir": "./dist/es5"
   },
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2
   },
   "files": [
-    "typings/main/definitions/request/index.d.ts",
-    "typings/main/ambient/node/index.d.ts",
-    "typings/browser/ambient/hapi/index.d.ts",
-    "typings/main/definitions/chai/index.d.ts",
-    "typings/main/definitions/sinon/index.d.ts",
-    "typings/main/ambient/mocha/index.d.ts",
-    "src/bot.ts",
-    "tests/bot.spec.ts"
+    "./typings/main/definitions/request/index.d.ts",
+    "./typings/main/ambient/node/index.d.ts",
+    "./typings/browser/ambient/hapi/index.d.ts",
+    "./typings/main/definitions/chai/index.d.ts",
+    "./typings/main/definitions/sinon/index.d.ts",
+    "./typings/main/ambient/mocha/index.d.ts",
+    "./src/bot.ts",
+    "./tests/bot.spec.ts"
   ]
 }
