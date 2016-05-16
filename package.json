@@ -1,5 +1,6 @@
 {
   "name": "botframework",
+  "version": "0.0.0-semantic-release",
   "description": "Framework for messaging bots",
   "main": "index.js",
   "scripts": {

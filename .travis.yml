@@ -1,7 +1,9 @@
 language: node_js
 node_js:
   - "4"
-  
+cache:
+  directories:
+    - node_modules
 env:
   global:
   - alias typings=./node_modules/.bin/typings
@@ -12,3 +14,6 @@ install:
 
 script:
   - npm test
+  
+after_success:
+  - npm run semantic-release
