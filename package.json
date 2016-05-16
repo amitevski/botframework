@@ -2,7 +2,8 @@
   "name": "botframework",
   "version": "0.0.0",
   "description": "Framework for messaging bots",
-  "main": "index.js",
+  "main": "./dist/es5/src/bot.js",
+  "typings": "./dist/es5/src/interfaces.d.ts",
   "scripts": {
     "prepublish": "typings install && npm run-script build",
     "pretest": "npm run-script build",

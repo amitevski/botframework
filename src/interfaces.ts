@@ -64,3 +64,6 @@ export interface IFacebookBotSettings {
   verify_token: string;
   page_id: string;
 }
+
+export * from './bot';
+export * from './facebook';
