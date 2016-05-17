@@ -4,7 +4,9 @@ export interface IBotUser {
   email?: string;
   firstname?: string;
   lastname?: string;
-  avatar?: string;
+  avatar?: string; //url
+  gender?: string;
+  timezone?: number;
 }
 
 export interface ITextMessage {

@@ -19,6 +19,7 @@
     "./typings/browser/ambient/hapi/index.d.ts",
     "./typings/main/definitions/chai/index.d.ts",
     "./typings/main/definitions/sinon/index.d.ts",
+    "./typings/main/definitions/bluebird/index.d.ts",
     "./typings/main/ambient/mocha/index.d.ts",
     "./src/bot.ts",
     "./tests/bot.spec.ts"

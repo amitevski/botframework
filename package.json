@@ -36,6 +36,7 @@
     "semantic-release": "^4.3.5"
   },
   "dependencies": {
+    "bluebird": "^3.3.5",
     "hapi": "^13.4.0",
     "request": "^2.72.0"
   }

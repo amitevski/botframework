@@ -1,6 +1,7 @@
 import {IBotController, IBotSettings, IBotUser, ITextMessage, IBotReply, IBotReplyListItem} from '../interfaces'
 import {IFbResponse, IFbCallback, FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE, FB_RESPONSE_ATTACHMENT_TYPE, IFbMessaging, FB_ATTACHMENT_TYPE, FB_MESSAGE_TYPE} from './interfaces';
-import {FacebookApi} from './api';
+import {FacebookApi, IFacebookProfile} from './api';
+import * as Promise from 'bluebird';
 
 export class FacebookReply implements IBotReply {
   constructor(private recipientId: number, private fbApi: FacebookApi) {}
@@ -33,6 +34,7 @@ export class FacebookReply implements IBotReply {
 }
 
 export class FacebookBot {
+  profiles: Object = {}; 
   fbApi: FacebookApi = null;
   constructor(private settings: IBotSettings, private botController: IBotController) {
     this.fbApi = new FacebookApi(settings);
@@ -59,29 +61,32 @@ export class FacebookBot {
     let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
     // console.log('dispatching..');
     if (messaging.optin) {
-      let user = this.getNewUserFromMessage(messaging);
-      return this.botController.newUser(user, reply);
-      
+      return this.getNewUserFromMessage(messaging)
+      .then( (user: IBotUser) => {
+        return this.botController.newUser(user, reply);
+      });
     }
-    if (messaging.message) {
-      if (messaging.message.text) {
-        let textMessage: ITextMessage =  {
-          user: this.getUserFromMessage(messaging),
-          text: messaging.message.text
+    return this.getUserFromMessage(messaging)
+    .then( (user: IBotUser) => {
+      if (messaging.message) {
+        if (messaging.message.text) {
+          let textMessage: ITextMessage =  {
+            user,
+            text: messaging.message.text
+          }
+          console.log(JSON.stringify(textMessage));
+          return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
         }
-        console.log(JSON.stringify(textMessage));
-        return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
+        if (messaging.message.attachments) {
+          return this.dispatchAttachmentMessage(messaging, user);
+        }
       }
-      if (messaging.message.attachments) {
-        return this.dispatchAttachmentMessage(messaging);
-      }
-    }
-    return (this.botController.catchAll) ? this.botController.catchAll(this.getUserFromMessage(messaging), messaging, reply) : null;
+      return (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
+    });
   }
   
   
-  private dispatchAttachmentMessage(messaging: IFbMessaging) {
-    let user = this.getUserFromMessage(messaging);
+  private dispatchAttachmentMessage(messaging: IFbMessaging, user: IBotUser) {
     let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
     for ( var attachment of messaging.message.attachments) {
       switch (attachment.type) {
@@ -110,20 +115,45 @@ export class FacebookBot {
     }
   }
   
-  private getNewUserFromMessage(messaging: IFbMessaging): IBotUser {
-    // get user details from fb api
-    // graph.facebook.com/v2.6/message.sender.id
-    //then
-    return {
-      id: messaging.sender.id.toString(),
-      email: messaging.optin.ref
-    };
+  /**
+   * add passed email in authentication callback
+   */
+  private getNewUserFromMessage(messaging: IFbMessaging): Promise<IBotUser> {
+    return this.getUserFromMessage(messaging)
+    .then( (profile: IBotUser) => {
+      profile.email = messaging.optin.ref;
+      return profile;
+    });
+    
   }
   
-  private getUserFromMessage(messaging: IFbMessaging): IBotUser {
-    return {
-      id: messaging.sender.id.toString()
-    };
+  private getUserProfile(userId: number): Promise<IFacebookProfile> {
+    if (this.profiles[userId]) {
+      return Promise.resolve(this.profiles[userId]);
+    }
+    return this.fbApi.getUserDetails(userId)
+    .then( (profile: IFacebookProfile) => {
+      this.profiles[userId] = profile;
+      return profile;
+    })
+    .catch( (err: any) => {
+      console.log('facebook: could not get profile, returning empty');
+      return {};
+    })
+  }
+  
+  private getUserFromMessage(messaging: IFbMessaging): Promise<IBotUser> {
+    return this.getUserProfile(messaging.sender.id)
+    .then( (profile: IFacebookProfile) => {
+      return {
+        id: messaging.sender.id.toString(),
+        firstname: profile.first_name || null,
+        lastname: profile.last_name || null,
+        avatar: profile.profile_pic || null,
+        gender: profile.gender || null,
+        timezone: profile.timezone || null,
+      };
+    });
   }
 }
 
