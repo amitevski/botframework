@@ -60,7 +60,7 @@ export class FacebookBot {
     // console.log('dispatching..');
     if (messaging.optin) {
       let user = this.getNewUserFromMessage(messaging);
-      return this.botController.newUser(user);
+      return this.botController.newUser(user, reply);
       
     }
     if (messaging.message) {
@@ -76,34 +76,35 @@ export class FacebookBot {
         return this.dispatchAttachmentMessage(messaging);
       }
     }
-    return (this.botController.catchAll) ? this.botController.catchAll(this.getUserFromMessage(messaging), messaging) : null;
+    return (this.botController.catchAll) ? this.botController.catchAll(this.getUserFromMessage(messaging), messaging, reply) : null;
   }
   
   
   private dispatchAttachmentMessage(messaging: IFbMessaging) {
     let user = this.getUserFromMessage(messaging);
+    let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
     for ( var attachment of messaging.message.attachments) {
       switch (attachment.type) {
         case FB_ATTACHMENT_TYPE.IMAGE:
           let imageMessage = {
             user, link: {url: attachment.payload.url}
           };
-          this.botController.imageMessage(imageMessage) || null;
+          this.botController.imageMessage(imageMessage, reply) || null;
           break;
         case FB_ATTACHMENT_TYPE.LOCATION:
           let location = {
             user, location: {coordinates: attachment.payload.coordinates}
           };
-          (this.botController.locationMessage) ? this.botController.locationMessage(location) : null;
+          (this.botController.locationMessage) ? this.botController.locationMessage(location, reply) : null;
           break;
         case null:
           if (attachment.payload === null) {
             let link = {user, link: {url: attachment.url, title: attachment.title}};
-            (this.botController.linkMessage) ? this.botController.linkMessage(link) : null;
+            (this.botController.linkMessage) ? this.botController.linkMessage(link, reply) : null;
           }
           break;
         default:
-          (this.botController.catchAll) ? this.botController.catchAll(user, messaging) : null;
+          (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
           break;
       }
     }
