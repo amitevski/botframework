@@ -52,7 +52,7 @@ export class BOT_REPLY_LIST_ACTION_TYPE {
   static POSTBACK: string = 'postback';
 }
 export interface IBotReplyListItemAction {
-  title?: string;
+  title: string;
   url?: string;
   payload?: string;
   type: BOT_REPLY_LIST_ACTION_TYPE;
