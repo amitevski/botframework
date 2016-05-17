@@ -62,7 +62,7 @@ export interface IBotReplyListItem {
   title: string;
   image_url?: string;
   subtitle?: string;
-  actions?: Array<IBotReplyListItemAction>; //buttons for facebook
+  buttons?: Array<IBotReplyListItemAction>; //buttons for facebook
 }
 
 // export interface IBotReplyList {
