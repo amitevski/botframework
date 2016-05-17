@@ -97,7 +97,7 @@ export class FacebookBot {
           };
           (this.botController.locationMessage) ? this.botController.locationMessage(location, reply) : null;
           break;
-        case null:
+        case FB_ATTACHMENT_TYPE.FALLBACK:
           if (attachment.payload === null) {
             let link = {user, link: {url: attachment.url, title: attachment.title}};
             (this.botController.linkMessage) ? this.botController.linkMessage(link, reply) : null;

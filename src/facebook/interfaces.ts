@@ -11,6 +11,7 @@ export class FB_ATTACHMENT_TYPE {
   static VIDEO: string = 'video';
   static AUDIO: string = 'audio';
   static LOCATION: string = 'location';
+  static FALLBACK: string = 'fallback'; //e.g. receiving link
 }
 
 export interface IFbMessageUser {
