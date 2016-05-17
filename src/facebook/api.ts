@@ -38,7 +38,7 @@ export class FacebookApi {
   public getUserDetails(userId: number): Promise<IFacebookProfile> {
     return new Promise( (resolve: Function, reject: Function) => {
       request.get({
-        url: `${BASE_API}/${userId}?fields=first_name,last_name,profile_pic,locale,timezone,genderaccess_token=${this.settings.fb.access_token}`
+        url: `${BASE_API}/${userId}?fields=first_name,last_name,profile_pic,locale,timezone,gender&access_token=${this.settings.fb.access_token}`
       }, (err, res, body) => {
         if (err) {
           console.log('facebook: could not get user from facebook', JSON.stringify(err, null, 2));

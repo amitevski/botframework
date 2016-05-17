@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/amitevski/botframework.svg?branch=master)](https://travis-ci.org/amitevski/botframework)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+
 # Bot Framework
 
 Bot Framework allows you to write bots for Facebook Messenger. But it has been designed to allow integration of other bots.
@@ -40,7 +43,6 @@ function ctrl() {
 
 ```javascript
 import {IBotSettings, , IBotController} from 'botframework';
-import {BotController} from './bot_controller';
 
 let botSettings: IBotSettings = {
   fb: {
