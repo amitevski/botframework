@@ -75,12 +75,12 @@ export interface IBotReply {
 }
 
 export interface IBotController {
-  newUser?(user: IBotUser): void;
+  newUser?(user: IBotUser, reply: IBotReply): void;
   textMessage?(textMessage: ITextMessage, reply: IBotReply): void;
-  imageMessage?(imageMessage: IImageMessage): void;
-  linkMessage?(linkMessage: ILinkMessage): void;
-  locationMessage?(locationMessage: ILocationMessage): void;
-  catchAll?(user: IBotUser, msg: Object): void;
+  imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
+  linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;
+  locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void;
+  catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
 }
 
 export interface IBotSettings {
