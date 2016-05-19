@@ -61,7 +61,7 @@ export class FacebookBot {
     let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
     // console.log('dispatching..');
     if (messaging.optin) {
-      return this.getNewUserFromMessage(messaging)
+      return this.getUserFromMessage(messaging)
       .then( (user: IBotUser) => {
         return this.botController.newUser({user, ref: messaging.optin.ref}, reply);
       });
@@ -115,17 +115,6 @@ export class FacebookBot {
     }
   }
   
-  /**
-   * add passed email in authentication callback
-   */
-  private getNewUserFromMessage(messaging: IFbMessaging): Promise<IBotUser> {
-    return this.getUserFromMessage(messaging)
-    .then( (profile: IBotUser) => {
-      profile.email = messaging.optin.ref;
-      return profile;
-    });
-    
-  }
   
   private getUserProfile(userId: number): Promise<IFacebookProfile> {
     if (this.profiles[userId]) {
