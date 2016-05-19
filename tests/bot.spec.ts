@@ -47,6 +47,7 @@ function fbSettings(): IBotSettings {
       page_id: '1442484699367623',
       access_token: 'at1',
       verify_token: 'vt1',
+      callback_path: '/facebook/receive',
       port: 3000
     }
   };

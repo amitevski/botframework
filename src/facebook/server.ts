@@ -31,12 +31,12 @@ export class FacebookServer {
     });
     server.route({
       method: 'GET',
-      path: '/facebook/receive',
+      path: this.settings.fb.callback_path,
       handler: this.verifyRequest.bind(this)
     });
     server.route({
       method: 'POST',
-      path: '/facebook/receive',
+      path: this.settings.fb.callback_path,
       handler: this.receiveMessage.bind(this)
     });
     server.start((err) => {

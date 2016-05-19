@@ -3,7 +3,10 @@
 var bf = require('../');
 var bot = new bf.Bot({
   fb: {
-    page_id: process.env.FB_PAGE_ID, verify_id: process.env.FB_VERIFY_ID, port: process.env.FB_PORT,
+    page_id: process.env.FB_PAGE_ID,
+    verify_id: process.env.FB_VERIFY_ID,
+    port: process.env.FB_PORT,
+    callback_path: process.env.FB_CALLBACK_PATH,
     access_token: process.env.FB_ACCESS_TOKEN
   }
 }, new ctrl());

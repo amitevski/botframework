@@ -97,6 +97,7 @@ export interface IBotSettings {
 
 export interface IFacebookBotSettings {
   port: number;
+  callback_path: string;
   access_token: string;
   verify_token: string;
   page_id: string;
