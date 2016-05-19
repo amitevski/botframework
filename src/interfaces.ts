@@ -47,6 +47,12 @@ export interface IImageMessage {
   link: IImage;
 }
 
+
+export interface INewUserMessage {
+  user: IBotUser;
+  ref: string;
+}
+
 // enum
 // currently very aligned to facebook
 export class BOT_REPLY_LIST_ACTION_TYPE {
@@ -77,7 +83,7 @@ export interface IBotReply {
 }
 
 export interface IBotController {
-  newUser?(user: IBotUser, reply: IBotReply): void;
+  newUser?(msg: INewUserMessage, reply: IBotReply): void;
   textMessage?(textMessage: ITextMessage, reply: IBotReply): void;
   imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
   linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;

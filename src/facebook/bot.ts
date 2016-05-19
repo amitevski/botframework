@@ -63,7 +63,7 @@ export class FacebookBot {
     if (messaging.optin) {
       return this.getNewUserFromMessage(messaging)
       .then( (user: IBotUser) => {
-        return this.botController.newUser(user, reply);
+        return this.botController.newUser({user, ref: messaging.optin.ref}, reply);
       });
     }
     return this.getUserFromMessage(messaging)

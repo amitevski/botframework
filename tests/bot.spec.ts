@@ -2,10 +2,10 @@
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import {FacebookBot} from '../src/facebook';
-import {IBotSettings, IBotUser, IBotController} from '../src/interfaces';
+import {IBotSettings, INewUserMessage, IBotUser, IBotController} from '../src/interfaces';
 
 class DummyController implements IBotController {
-  newUser(user: IBotUser) {console.log('got new user');}
+  newUser(msg: INewUserMessage) {console.log('got new user');}
   textMessage(textMessage: any) {console.log('got new textMessage');}
   imageMessage(image: any) {console.log('got new imageMessage');}
   linkMessage(link: any) {console.log('got linkMessage');}
