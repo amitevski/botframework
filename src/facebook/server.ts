@@ -26,7 +26,6 @@ export class FacebookServer {
   private startWebServer() {
     let server = new Server();
     server.connection({
-      host: 'localhost',
       port: this.settings.fb.port
     });
     server.route({
