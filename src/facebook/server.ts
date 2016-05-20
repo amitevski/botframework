@@ -52,10 +52,10 @@ export class FacebookServer {
   }
   
   private verifyRequest(request: Request, reply: IReply) {
-    let hub: IFacebookVerifyHubParams = request.query.hub;
-    if (hub.mode === FACEBOOK_HUB_MODE.SUBSCRIBE) {
-      if (hub.verify_token === this.settings.fb.verify_token) {
-        return reply(hub.challenge);
+    let query: any = request.query;
+    if (query['hub.mode'] === FACEBOOK_HUB_MODE.SUBSCRIBE) {
+      if (query['hub.verify_token'] === this.settings.fb.verify_token) {
+        return reply(query['hub.challenge']);
       }
     }
     reply('OK');
