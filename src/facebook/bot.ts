@@ -1,4 +1,4 @@
-import {IBotController, IBotSettings, IBotUser, ITextMessage, IBotReply, IBotReplyListItem} from '../interfaces'
+import {IBotController, BOT_REQUEST_TYPE, IBotSettings, IBotUser, IBotRequest, IBotReply, IBotReplyListItem} from '../interfaces'
 import {IFbResponse, IFbCallback, FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE, FB_RESPONSE_ATTACHMENT_TYPE, IFbMessaging, FB_ATTACHMENT_TYPE, FB_MESSAGE_TYPE} from './interfaces';
 import {FacebookApi, IFacebookProfile} from './api';
 import * as Promise from 'bluebird';
@@ -67,17 +67,24 @@ export class FacebookBot {
   public dispatchSingleMessage(messaging: IFbMessaging, user: IBotUser) {
     let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
     if (messaging.delivery) {
-      return (this.botController.delivered) ? this.botController.delivered(user, messaging.delivery, reply) : null;
+      let request = {
+        user, delivery: messaging.delivery, type: BOT_REQUEST_TYPE.FACEBOOK
+      };
+      return (this.botController.delivered) ? this.botController.delivered(request, reply) : null;
     }
     // console.log('dispatching..');
     if (messaging.optin) {
-      return (this.botController.newUser) ? this.botController.newUser({user, ref: messaging.optin.ref}, reply) : null;
+      return (this.botController.newUser) ? this.botController.newUser({
+        user, ref: messaging.optin.ref,
+        type: BOT_REQUEST_TYPE.FACEBOOK
+      }, reply) : null;
     }
     if (messaging.message) {
       if (messaging.message.text) {
-        let textMessage: ITextMessage =  {
+        let textMessage: IBotRequest =  {
           user,
-          text: messaging.message.text
+          text: messaging.message.text,
+          type: BOT_REQUEST_TYPE.FACEBOOK
         }
         console.log(JSON.stringify(textMessage));
         return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
@@ -86,7 +93,11 @@ export class FacebookBot {
         return this.dispatchAttachmentMessage(messaging, user);
       }
     }
-    return (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
+    let request = {
+      user, raw: messaging,
+      type: BOT_REQUEST_TYPE.FACEBOOK
+    }
+    return (this.botController.catchAll) ? this.botController.catchAll(request, reply) : null;
   }
   
   
@@ -96,24 +107,26 @@ export class FacebookBot {
       switch (attachment.type) {
         case FB_ATTACHMENT_TYPE.IMAGE:
           let imageMessage = {
-            user, link: {url: attachment.payload.url}
+            user, link: {url: attachment.payload.url},
+            type: BOT_REQUEST_TYPE.FACEBOOK
           };
           this.botController.imageMessage(imageMessage, reply) || null;
           break;
         case FB_ATTACHMENT_TYPE.LOCATION:
           let location = {
-            user, location: {coordinates: attachment.payload.coordinates}
+            user, location: {coordinates: attachment.payload.coordinates}, type: BOT_REQUEST_TYPE.FACEBOOK
           };
           (this.botController.locationMessage) ? this.botController.locationMessage(location, reply) : null;
           break;
         case FB_ATTACHMENT_TYPE.FALLBACK:
           if (attachment.payload === null) {
-            let link = {user, link: {url: attachment.url, title: attachment.title}};
+            let link = {user, link: {url: attachment.url, title: attachment.title}, type: BOT_REQUEST_TYPE.FACEBOOK };
             (this.botController.linkMessage) ? this.botController.linkMessage(link, reply) : null;
           }
           break;
         default:
-          (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
+          let request = {user, raw: messaging, type: BOT_REQUEST_TYPE.FACEBOOK};
+          (this.botController.catchAll) ? this.botController.catchAll(request, reply) : null;
           break;
       }
     }

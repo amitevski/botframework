@@ -2,7 +2,7 @@
 import {expect} from 'chai';
 import * as sinon from 'sinon';
 import {FacebookBot, IFbMessaging} from '../src/facebook';
-import {IBotSettings, INewUserMessage, IBotUser, IBotController} from '../src/interfaces';
+import {IBotSettings, IBotRequest, IBotReply, IBotUser, IBotController} from '../src/interfaces';
 
 class DummyController implements IBotController {
   cc = {
@@ -14,13 +14,13 @@ class DummyController implements IBotController {
     delivered: 0,
     catchAll: 0,
   }
-  newUser(msg: INewUserMessage) {console.log('got new user'); this.cc.newUser++;}
-  textMessage(textMessage: any) {console.log('got new textMessage'); this.cc.textMessage++;}
-  imageMessage(image: any) {console.log('got new imageMessage'); this.cc.imageMessage++;}
-  linkMessage(link: any) {console.log('got linkMessage'); this.cc.linkMessage++;}
-  locationMessage(link: any) {console.log('got locationMessage'); this.cc.locationMessage++;}
-  delivered(link: any) {console.log('got delivered'); this.cc.delivered++;}
-  catchAll(anything: any) {console.log('got catchAll'); this.cc.catchAll++;}
+  newUser(msg: IBotRequest, reply: IBotReply) {console.log('got new user'); this.cc.newUser++;}
+  textMessage(msg: IBotRequest, reply: IBotReply) {console.log('got new textMessage'); this.cc.textMessage++;}
+  imageMessage(image: IBotRequest, reply: IBotReply) {console.log('got new imageMessage'); this.cc.imageMessage++;}
+  linkMessage(msg: IBotRequest, reply: IBotReply) {console.log('got linkMessage'); this.cc.linkMessage++;}
+  locationMessage(msg: IBotRequest, reply: IBotReply) {console.log('got locationMessage'); this.cc.locationMessage++;}
+  delivered(msg: IBotRequest, reply: IBotReply) {console.log('got delivered'); this.cc.delivered++;}
+  catchAll(msg: IBotRequest, reply: IBotReply) {console.log('got catchAll'); this.cc.catchAll++;}
 }
 
 

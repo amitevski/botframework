@@ -9,10 +9,6 @@ export interface IBotUser {
   timezone?: number;
 }
 
-export interface ITextMessage {
-  user: IBotUser;
-  text: string;
-}
 
 export interface ILink {
   url: string;
@@ -32,26 +28,7 @@ export interface ILocation {
   coordinates: ICoordinates;
 }
 
-export interface ILinkMessage {
-  user: IBotUser;
-  link: ILink;
-}
 
-export interface ILocationMessage {
-  user: IBotUser;
-  location: ILocation;
-}
-
-export interface IImageMessage {
-  user: IBotUser;
-  link: IImage;
-}
-
-
-export interface INewUserMessage {
-  user: IBotUser;
-  ref: string;
-}
 
 // enum
 // currently very aligned to facebook
@@ -76,20 +53,45 @@ export interface IBotReplyListItem {
 // export interface IBotReplyList {
 //   elements: Array<IBotReplyListItem>;
 // }
+export class BOT_REQUEST_TYPE {
+  static FACEBOOK = 'facebook';
+}
+
+export interface IBotRequest {
+  user: IBotUser;
+  location?: ILocation;
+  link?: IImage;
+  ref?: string;
+  image?: IImage;
+  text?: string;
+  raw?: any;
+  type: BOT_REQUEST_TYPE; // facebook|slack...
+}
 
 export interface IBotReply {
   text(text: string): void;
   list(list: Array<IBotReplyListItem>): void;
 }
 
+export interface IDeliveryMessage {
+  user: IBotUser;
+  delivery: any;
+}
+
+
+export interface IUnknownMessage {
+  user: IBotUser;
+  delivery: any;
+}
+
 export interface IBotController {
-  newUser?(msg: INewUserMessage, reply: IBotReply): void;
-  textMessage?(textMessage: ITextMessage, reply: IBotReply): void;
-  imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
-  linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;
-  locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void;
-  delivered?(user: IBotUser, delivery: Object, reply: IBotReply): void;
-  catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
+  newUser?(request: IBotRequest, reply: IBotReply): void;
+  textMessage?(request: IBotRequest, reply: IBotReply): void;
+  imageMessage?(request: IBotRequest, reply: IBotReply): void;
+  linkMessage?(request: IBotRequest, reply: IBotReply): void;
+  locationMessage?(request: IBotRequest, reply: IBotReply): void;
+  delivered?(request: IBotRequest, reply: IBotReply): void;
+  catchAll?(request: IBotRequest, reply: IBotReply): void;
 }
 
 export interface IBotSettings {
