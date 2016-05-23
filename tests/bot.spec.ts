@@ -1,16 +1,26 @@
 
 import {expect} from 'chai';
 import * as sinon from 'sinon';
-import {FacebookBot} from '../src/facebook';
+import {FacebookBot, IFbMessaging} from '../src/facebook';
 import {IBotSettings, INewUserMessage, IBotUser, IBotController} from '../src/interfaces';
 
 class DummyController implements IBotController {
-  newUser(msg: INewUserMessage) {console.log('got new user');}
-  textMessage(textMessage: any) {console.log('got new textMessage');}
-  imageMessage(image: any) {console.log('got new imageMessage');}
-  linkMessage(link: any) {console.log('got linkMessage');}
-  locationMessage(link: any) {console.log('got locationMessage');}
-  catchAll(anything: any) {console.log('got catchAll');}
+  cc = {
+    newUser: 0,
+    textMessage: 0,
+    imageMessage: 0,
+    linkMessage: 0,
+    locationMessage: 0,
+    delivered: 0,
+    catchAll: 0,
+  }
+  newUser(msg: INewUserMessage) {console.log('got new user'); this.cc.newUser++;}
+  textMessage(textMessage: any) {console.log('got new textMessage'); this.cc.textMessage++;}
+  imageMessage(image: any) {console.log('got new imageMessage'); this.cc.imageMessage++;}
+  linkMessage(link: any) {console.log('got linkMessage'); this.cc.linkMessage++;}
+  locationMessage(link: any) {console.log('got locationMessage'); this.cc.locationMessage++;}
+  delivered(link: any) {console.log('got delivered'); this.cc.delivered++;}
+  catchAll(anything: any) {console.log('got catchAll'); this.cc.catchAll++;}
 }
 
 
@@ -22,29 +32,57 @@ describe('FacebookBot', () => {
     beforeEach(function () {
         ctrl = new DummyController();
         bot = new FacebookBot(fbSettings(), ctrl);
+        bot.profiles [123] = {
+          id: 123,
+          firstname: 'Foo',
+          lastname: 'Bar'
+        };
     });
 
     describe('receiveMessage', () => {
-        it('return false if message type != page', () => {
-            expect(bot.receiveMessage({object: 'foo', entry: []})).to.eql(false);
+        it('return false if message type != page', (done) => {
+          let expected = 'invalid message type';
+          bot.receiveMessage({object: 'foo', entry: []})
+          .catch( err => {
+            expect(err).to.eql(expected);
+            done();
+          })
         });
-        it('return true if message has been processed', () => {
-            expect(bot.receiveMessage({object: 'page', entry: []})).to.eql(true);
-        });
-        it('should dispatch each message', () => {
-          bot.receiveMessage(fakeMessageMixed());
+        // it('return true if message has been processed', () => {
+        //     expect(bot.receiveMessage({object: 'page', entry: []})).to.eql(true);
+        // });
+        it('should dispatch each message', (done) => {
+          bot.receiveMessage(fakeMessageMixed())
+          .then( dispatchResults => {
+            expect(dispatchResults.length).to.eql(4);
+            expect(ctrl.cc.delivered).to.eql(1);
+            expect(ctrl.cc.textMessage).to.eql(1);
+            expect(ctrl.cc.imageMessage).to.eql(1);
+            expect(ctrl.cc.locationMessage).to.eql(1);
+            done();
+          })
           // just console.log testing for now :(
           // if anyone knows a good mocking library for typescript youre welcome :)
-          expect(true).to.eql(true);
+          
         });
+        
     });
+   describe('dispatchSingleMessage', () => {
+     it('should not dispatch delivery messages to catchAll', () => {
+       let fakeMsgs = fakeMessageMixed(),
+        message: IFbMessaging = fakeMsgs.entry[0].messaging[0];
+       let result = bot.dispatchSingleMessage(message, {id: '1', firstname: 'foo', lastname: 'bar'} );   
+       expect(ctrl.cc.delivered).to.eql(1);
+       expect(ctrl.cc.catchAll).to.eql(0);
+    });
+   })
 });
 
 
 function fbSettings(): IBotSettings {
   return {
     fb: {
-      page_id: '1442484699367623',
+      page_id: '234',
       access_token: 'at1',
       verify_token: 'vt1',
       callback_path: '/facebook/receive',
@@ -58,15 +96,31 @@ function fakeMessageMixed() {
     "object": "page",
     "entry": [
       {
-        "id": 1442484699367623,
+        "id": 234,
         "time": 1462967781419,
         "messaging": [
           {
+               "sender":{
+                  "id":123
+               },
+               "recipient":{
+                  "id":234
+               },
+               "timestamp":1460245672080,
+               "delivery":{
+                  "mids":[
+                     "mid.1458668856218:ed81099e15d3f4f233"
+                  ],
+                  "watermark":1458668856253,
+                  "seq":37
+               }
+            },
+          {
             "sender":{
-              "id":10208007577165870
+              "id":123
             },
             "recipient":{
-              "id": 1442484699367623
+              "id": 234
             },
             "timestamp":1460245672080,
             "message":{
@@ -77,10 +131,10 @@ function fakeMessageMixed() {
           },
           {
             "sender":{
-              "id":10208007577165870
+              "id":123
             },
             "recipient":{
-              "id": 1442484699367623
+              "id": 234
             },
             "timestamp":1458696618268,
             "message":{
@@ -98,10 +152,10 @@ function fakeMessageMixed() {
           },
           {
             "sender": {
-              "id": 10208007577165870
+              "id": 123
             },
             "recipient": {
-              "id": 1442484699367623
+              "id": 234
             },
             "timestamp": 1462967781299,
             "message": {

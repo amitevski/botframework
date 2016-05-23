@@ -88,6 +88,7 @@ export interface IBotController {
   imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
   linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;
   locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void;
+  delivered?(user: IBotUser, delivery: Object, reply: IBotReply): void;
   catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
 }
 

@@ -41,8 +41,9 @@ export class FacebookBot {
   }
   
   public receiveMessage(fbMessage: IFbCallback) {
+    var promises: any = [];
     // console.log('received message ..', JSON.stringify(fbMessage, null, 2));
-    if (fbMessage.object !== FB_MESSAGE_TYPE.PAGE) return false;
+    if (fbMessage.object !== FB_MESSAGE_TYPE.PAGE) return Promise.reject('invalid message type');
     for (var entry of fbMessage.entry) {
       // skip messages for other page_id
       if (entry.id.toString() !== this.settings.fb.page_id) {
@@ -51,38 +52,41 @@ export class FacebookBot {
       }
       // console.log('messaging ..', JSON.stringify(entry.messaging, null, 2));
       for (var messaging of entry.messaging) {
-        this.dispatchSingleMessage(messaging);
+        let p = this.getUserFromMessage(messaging)
+          .then(this.dispatchSingleMessage.bind(this, messaging))
+          .catch( err => {
+            console.log(`error retrieving user ${JSON.stringify(err)}`);
+            throw err;
+          });
+        promises.push(p);
       }
     }
-    return true;
+    return Promise.all(promises);
   }
   
-  public dispatchSingleMessage(messaging: IFbMessaging) {
+  public dispatchSingleMessage(messaging: IFbMessaging, user: IBotUser) {
     let reply: FacebookReply = new FacebookReply(messaging.sender.id, this.fbApi);
+    if (messaging.delivery) {
+      return (this.botController.delivered) ? this.botController.delivered(user, messaging.delivery, reply) : null;
+    }
     // console.log('dispatching..');
     if (messaging.optin) {
-      return this.getUserFromMessage(messaging)
-      .then( (user: IBotUser) => {
-        return this.botController.newUser({user, ref: messaging.optin.ref}, reply);
-      });
+      return (this.botController.newUser) ? this.botController.newUser({user, ref: messaging.optin.ref}, reply) : null;
     }
-    return this.getUserFromMessage(messaging)
-    .then( (user: IBotUser) => {
-      if (messaging.message) {
-        if (messaging.message.text) {
-          let textMessage: ITextMessage =  {
-            user,
-            text: messaging.message.text
-          }
-          console.log(JSON.stringify(textMessage));
-          return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
+    if (messaging.message) {
+      if (messaging.message.text) {
+        let textMessage: ITextMessage =  {
+          user,
+          text: messaging.message.text
         }
-        if (messaging.message.attachments) {
-          return this.dispatchAttachmentMessage(messaging, user);
-        }
+        console.log(JSON.stringify(textMessage));
+        return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
       }
-      return (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
-    });
+      if (messaging.message.attachments) {
+        return this.dispatchAttachmentMessage(messaging, user);
+      }
+    }
+    return (this.botController.catchAll) ? this.botController.catchAll(user, messaging, reply) : null;
   }
   
   
