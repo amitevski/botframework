@@ -60,7 +60,7 @@ export class BOT_REQUEST_TYPE {
 export interface IBotRequest {
   user: IBotUser;
   location?: ILocation;
-  link?: IImage;
+  link?: ILink;
   ref?: string;
   image?: IImage;
   text?: string;
