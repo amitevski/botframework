@@ -135,4 +135,19 @@ reply.list(botItems);
 //reply with text
 reply.text('Hi there');
 
+//reply with buttons
+let buttons: IBotReplyListItemAction[] = [
+  {
+    title: 'Open Link',
+    url: obj.href,
+    type: 'web_url'
+  },
+  {
+    title: 'Show Updates',
+    payload: 'SHOW_UPDATES',
+    type: 'postback'
+  }
+];
+reply.buttons('Please choose:', );
+
 ```

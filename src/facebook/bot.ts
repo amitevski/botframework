@@ -1,4 +1,4 @@
-import {IBotController, BOT_REQUEST_TYPE, IBotSettings, IBotUser, IBotRequest, IBotReply, IBotReplyListItem} from '../interfaces'
+import {IBotController, BOT_REQUEST_TYPE, IBotSettings, IBotUser, IBotRequest, IBotReply, IBotReplyListItemAction, IBotReplyListItem} from '../interfaces'
 import {IFbResponse, IFbCallback, FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE, FB_RESPONSE_ATTACHMENT_TYPE, IFbMessaging, FB_ATTACHMENT_TYPE, FB_MESSAGE_TYPE} from './interfaces';
 import {FacebookApi, IFacebookProfile} from './api';
 import * as Promise from 'bluebird';
@@ -25,6 +25,25 @@ export class FacebookReply implements IBotReply {
           payload: {
             template_type: FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE.GENERIC,
             elements
+          }
+        }
+      }
+    };
+    this.fbApi.sendMessage(response);
+  }
+  
+  buttons(text: string, buttons: IBotReplyListItemAction[]): void {
+    let response: IFbResponse = {
+      recipient: {
+        id: this.recipientId
+      },
+      message: {
+        attachment: {
+          type: FB_RESPONSE_ATTACHMENT_TYPE.TEMPLATE,
+          payload: {
+            template_type: FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE.BUTTON,
+            text,
+            buttons
           }
         }
       }

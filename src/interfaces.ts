@@ -70,6 +70,7 @@ export interface IBotRequest {
 
 export interface IBotReply {
   text(text: string): void;
+  buttons(text: string, buttons: IBotReplyListItemAction[]): void;
   list(list: Array<IBotReplyListItem>): void;
 }
 

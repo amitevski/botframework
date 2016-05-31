@@ -102,7 +102,7 @@ export interface IFbResponseAttachmentPayload {
   template_type: FB_RESPONSE_ATTACHMENT_PAYLOAD_TYPE;
   elements?: Array<IFbResponseAttachmentPayloadElement>; // for generic and receipt template_type
   text?: string; // for button template_type
-  buttons?: Array<string>; // for button template_type
+  buttons?: Array<IFbResponseAttachmentPayloadElementAction>; // for button template_type
   // for receipt
   recipient_name?: string;
   order_number?: string;
@@ -130,6 +130,34 @@ export interface IFbResponse {
 
 
 /*
+
+send button 
+
+"recipient":{
+    "id":"USER_ID"
+  },
+  "message":{
+    "attachment":{
+      "type":"template",
+      "payload":{
+        "template_type":"button",
+        "text":"What do you want to do next?",
+        "buttons":[
+          {
+            "type":"web_url",
+            "url":"https://petersapparel.parseapp.com",
+            "title":"Show Website"
+          },
+          {
+            "type":"postback",
+            "title":"Start Chatting",
+            "payload":"USER_DEFINED_PAYLOAD"
+          }
+        ]
+      }
+    }
+  }
+
 Receive a Message
 {
   "object":"page",
