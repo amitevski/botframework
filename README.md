@@ -4,7 +4,8 @@
 
 # Bot Framework
 
-Bot Framework allows you to write bots for Facebook Messenger. But it has been designed to allow integration of other bots.
+Bot Framework allows you to write bots for Facebook Messenger implementing MVC like controllers.
+But it has been designed to allow integration of other bots in future.
 
 ## Install
 ```bash
@@ -43,6 +44,8 @@ var bot = new bf.Bot({
   }
 }, new ctrl());
 
+bot.setWelcomeMessage('Hello There'); // sets up the message on the facebook welcome screen for new users
+
 function ctrl() {
   this.newUser = function (data) {
     console.log('user'+ JSON.stringify(data));
@@ -51,11 +54,7 @@ function ctrl() {
   this.textMessage = function(data, reply) {
     reply.text('Servus: ' + data.text);
   };
-  // newUser?(msg: INewUserMessage, reply: IBotReply): void;
-  // imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
-  // linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;
-  // locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void;
-  // catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
+
 }
 ```
 
@@ -76,18 +75,13 @@ let botSettings: IBotSettings = {
 } ;
 
 class BotController implements IBotController {
-  textMessage(msg: ITextMessage, reply: IBotReply): any {
+  textMessage(msg: IBotRequest, reply: IBotReply): any {
     reply.text('hi');
   }
-  
-  // newUser?(msg: INewUserMessage, reply: IBotReply): void;
-  // imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void;
-  // linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void;
-  // locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void;
-  // catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
+
 }
 var bot = new Bot(botSettings, new BotController());
-bot.setWelcomeMessage('
+bot.setWelcomeMessage('Hello There'); // sets up the message on the facebook welcome screen for new users
 ```
 
 ### Handling other message types like Location, Image, Authentication
@@ -98,14 +92,16 @@ You can implement more handlers. Following callbacks are currently supported:
 
 ```javascript
 export interface IBotController {
-  newUser?(msg: INewUserMessage, reply: IBotReply): void; // handles facebook Authentication callback
-  textMessage?(textMessage: ITextMessage, reply: IBotReply): void; // handles text only messages
-  imageMessage?(imageMessage: IImageMessage, reply: IBotReply): void; // handles received images
-  linkMessage?(linkMessage: ILinkMessage, reply: IBotReply): void; // handles received links from mobile phone sendTo Plugin
-  locationMessage?(locationMessage: ILocationMessage, reply: IBotReply): void; // handles received locations
-  catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
+  newUser?(request: IBotRequest, reply: IBotReply): void; // handles facebook Authentication callback
+  textMessage?(request: IBotRequest, reply: IBotReply): void; // handles plain text messages
+  imageMessage?(request: IBotRequest, reply: IBotReply): void; // image received
+  linkMessage?(request: IBotRequest, reply: IBotReply): void; // link received through e.g. safari sendTo Messenger plugin
+  locationMessage?(request: IBotRequest, reply: IBotReply): void; // user sent his location
+  delivered?(request: IBotRequest, reply: IBotReply): void; // facebook delivery message
+  catchAll?(request: IBotRequest, reply: IBotReply): void; // everything unhandled goes here
 }
 ```
+
 
 ### Replying
 
