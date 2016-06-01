@@ -23,6 +23,34 @@ export class FacebookServer {
     this.startWebServer();
   }
   
+  public setWelcomeMessage(text: string) {
+    request.post(
+      {
+        url: `${BASE_API}/${this.settings.fb.page_id}/thread_settings?access_token=${this.settings.fb.access_token}`,
+        body: {
+          setting_type:"call_to_actions",
+          thread_state:"new_thread",
+          call_to_actions:[
+            {
+              message:{
+                text
+              }
+            }
+          ]
+        },
+        json: true
+      }, (err, res, body) => {
+      if (err) {
+        console.log('could not change fb new thread settings', JSON.stringify(err, null, 2));
+        throw err;
+      }
+      if (res.statusCode >= 400) {
+        throw new Error(`Error connecting to fb ${JSON.stringify(res)}`);
+      }
+      console.log('changed fb new thread settings');
+    });
+  }
+  
   private startWebServer() {
     let server = new Server();
     server.connection({

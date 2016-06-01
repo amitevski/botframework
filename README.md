@@ -87,6 +87,7 @@ class BotController implements IBotController {
   // catchAll?(user: IBotUser, msg: Object, reply: IBotReply): void;
 }
 var bot = new Bot(botSettings, new BotController());
+bot.setWelcomeMessage('
 ```
 
 ### Handling other message types like Location, Image, Authentication

@@ -10,4 +10,9 @@ export class Bot {
       this.facebookServer = new FacebookServer(settings, this.facebookBot) ;
     }
   }
+  
+  setWelcomeMessage(text: string) {
+    if (!this.facebookServer) return;
+    this.facebookServer.setWelcomeMessage(text);
+  }
 }
