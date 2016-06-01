@@ -149,6 +149,6 @@ let buttons: IBotReplyListItemAction[] = [
     type: 'postback'
   }
 ];
-reply.buttons('Please choose:', );
+reply.buttons('Please choose:', buttons);
 
 ```
