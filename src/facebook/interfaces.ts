@@ -41,6 +41,10 @@ export interface IFbMessageOptin {
   ref: string; // pass through param
 }
 
+export interface IFbPostbackPayload {
+  payload: string;
+}
+
 export interface IFbMessaging {
   sender: IFbMessageUser;
   recipient: IFbMessageUser;
@@ -48,7 +52,7 @@ export interface IFbMessaging {
   message?: IFbMessage;
   optin?: IFbMessageOptin;
   delivery?: Object; // delivery
-  postback?: Object; // postback with custom val
+  postback?: IFbPostbackPayload; // postback with custom val
 }
 
 export interface IFbMessageEntry {

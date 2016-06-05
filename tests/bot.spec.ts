@@ -7,6 +7,7 @@ import {IBotSettings, IBotRequest, IBotReply, IBotUser, IBotController} from '..
 class DummyController implements IBotController {
   cc = {
     newUser: 0,
+    postback: 0,
     textMessage: 0,
     imageMessage: 0,
     linkMessage: 0,
@@ -15,6 +16,7 @@ class DummyController implements IBotController {
     catchAll: 0,
   }
   newUser(msg: IBotRequest, reply: IBotReply) {console.log('got new user'); this.cc.newUser++;}
+  postback(msg: IBotRequest, reply: IBotReply) {console.log('got new postback'); this.cc.postback++;}
   textMessage(msg: IBotRequest, reply: IBotReply) {console.log('got new textMessage'); this.cc.textMessage++;}
   imageMessage(image: IBotRequest, reply: IBotReply) {console.log('got new imageMessage'); this.cc.imageMessage++;}
   linkMessage(msg: IBotRequest, reply: IBotReply) {console.log('got linkMessage'); this.cc.linkMessage++;}
@@ -54,8 +56,9 @@ describe('FacebookBot', () => {
         it('should dispatch each message', (done) => {
           bot.receiveMessage(fakeMessageMixed())
           .then( dispatchResults => {
-            expect(dispatchResults.length).to.eql(4);
+            expect(dispatchResults.length).to.eql(5);
             expect(ctrl.cc.delivered).to.eql(1);
+            expect(ctrl.cc.postback).to.eql(1);
             expect(ctrl.cc.textMessage).to.eql(1);
             expect(ctrl.cc.imageMessage).to.eql(1);
             expect(ctrl.cc.locationMessage).to.eql(1);
@@ -63,7 +66,6 @@ describe('FacebookBot', () => {
           })
           // just console.log testing for now :(
           // if anyone knows a good mocking library for typescript youre welcome :)
-          
         });
         
     });
@@ -174,6 +176,24 @@ function fakeMessageMixed() {
                   }
                 }
               ]
+            }
+          }
+        ]
+      },
+      {
+        "id":234,
+        "time":1458692752478,
+        "messaging":[
+          {
+            "sender":{
+              "id":123
+            },
+            "recipient":{
+              "id":234
+            },
+            "timestamp":1458692752478,
+            "postback":{
+              "payload":"USER_DEFINED_PAYLOAD"
             }
           }
         ]

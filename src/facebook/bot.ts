@@ -98,6 +98,12 @@ export class FacebookBot {
         type: BOT_REQUEST_TYPE.FACEBOOK
       }, reply) : null;
     }
+    if (messaging.postback) {
+      return (this.botController.postback) ? this.botController.postback({
+        user, payload: messaging.postback.payload,
+        type: BOT_REQUEST_TYPE.FACEBOOK
+      }, reply) : null;
+    }
     if (messaging.message) {
       if (messaging.message.text) {
         let textMessage: IBotRequest =  {

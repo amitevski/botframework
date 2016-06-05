@@ -62,6 +62,7 @@ export interface IBotRequest {
   location?: ILocation;
   link?: ILink;
   ref?: string;
+  payload?: string;
   image?: IImage;
   text?: string;
   raw?: any;
@@ -87,6 +88,7 @@ export interface IUnknownMessage {
 
 export interface IBotController {
   newUser?(request: IBotRequest, reply: IBotReply): void;
+  postback?(request: IBotRequest, reply: IBotReply): void;
   textMessage?(request: IBotRequest, reply: IBotReply): void;
   imageMessage?(request: IBotRequest, reply: IBotReply): void;
   linkMessage?(request: IBotRequest, reply: IBotReply): void;
