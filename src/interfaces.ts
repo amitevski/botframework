@@ -99,6 +99,7 @@ export interface IBotController {
 
 export interface IBotSettings {
   fb?: IFacebookBotSettings;
+  debug?: boolean;
 }
 
 export interface IFacebookBotSettings {

@@ -61,7 +61,7 @@ export class FacebookBot {
   
   public receiveMessage(fbMessage: IFbCallback) {
     var promises: any = [];
-    // console.log('received message ..', JSON.stringify(fbMessage, null, 2));
+    if (this.settings.debug) console.log('received message ..', JSON.stringify(fbMessage, null, 2));
     if (fbMessage.object !== FB_MESSAGE_TYPE.PAGE) return Promise.reject('invalid message type');
     for (var entry of fbMessage.entry) {
       // skip messages for other page_id
@@ -69,7 +69,7 @@ export class FacebookBot {
         console.log('skipping', JSON.stringify(entry, null, 2));
         continue;
       }
-      // console.log('messaging ..', JSON.stringify(entry.messaging, null, 2));
+      if (this.settings.debug) console.log('messaging ..', JSON.stringify(entry.messaging, null, 2));
       for (var messaging of entry.messaging) {
         let p = this.getUserFromMessage(messaging)
           .then(this.dispatchSingleMessage.bind(this, messaging))
@@ -91,7 +91,7 @@ export class FacebookBot {
       };
       return (this.botController.delivered) ? this.botController.delivered(request, reply) : null;
     }
-    // console.log('dispatching..');
+    if (this.settings.debug) console.log('dispatching..');
     if (messaging.optin) {
       return (this.botController.newUser) ? this.botController.newUser({
         user, ref: messaging.optin.ref,
@@ -111,7 +111,7 @@ export class FacebookBot {
           text: messaging.message.text,
           type: BOT_REQUEST_TYPE.FACEBOOK
         }
-        console.log(JSON.stringify(textMessage));
+        if (this.settings.debug) console.log(JSON.stringify(textMessage));
         return (this.botController.textMessage) ? this.botController.textMessage(textMessage, reply) : null;
       }
       if (messaging.message.attachments) {
