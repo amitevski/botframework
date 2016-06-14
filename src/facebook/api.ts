@@ -19,19 +19,22 @@ export class FacebookApi {
   
   constructor(private settings: IBotSettings) {}
   
-  public sendMessage(msg: IFbResponse) {
-    request.post({
-      url: `${BASE_API}/me/messages?access_token=${this.settings.fb.access_token}`,
-      body: msg, json: true
-    }, (err, res, body) => {
-      if (err) {
-        console.log('facebook: could not send msg to fb', JSON.stringify(err, null, 2));
-        throw err;
-      }
-      if (res.statusCode >= 400) {
-        throw new Error(`facebook: Error sending to fb ${JSON.stringify(res)} ${JSON.stringify(msg)}`);
-      }
-      console.log('facebook: reply sent');
+  public sendMessage(msg: IFbResponse): Promise<any> {
+    return new Promise( (resolve: Function, reject: Function) => {
+      request.post({
+        url: `${BASE_API}/me/messages?access_token=${this.settings.fb.access_token}`,
+        body: msg, json: true
+      }, (err, res, body) => {
+        if (err) {
+          console.log('facebook: could not send msg to fb', JSON.stringify(err, null, 2));
+          return reject(err);
+        }
+        if (res.statusCode >= 400) {
+          return reject(new Error(`facebook: Error sending to fb ${JSON.stringify(res)} ${JSON.stringify(msg)}`));
+        }
+        if (this.settings.debug) console.log(`facebook: reply sent ${JSON.stringify(res)}` );
+        return resolve(res);
+      });
     });
   }
   

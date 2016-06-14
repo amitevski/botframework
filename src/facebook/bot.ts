@@ -5,16 +5,18 @@ import * as Promise from 'bluebird';
 
 export class FacebookReply implements IBotReply {
   constructor(private recipientId: number, private fbApi: FacebookApi) {}
-  text(text: string) {
+
+  text(text: string): Promise<any> {
     let response = {
       recipient: {
         id: this.recipientId
       },
       message: {text}
     };
-    this.fbApi.sendMessage(response);
+    return this.fbApi.sendMessage(response);
   }
-  list(elements: Array<IBotReplyListItem>) {
+
+  list(elements: Array<IBotReplyListItem>): Promise<any> {
     let response: IFbResponse = {
       recipient: {
         id: this.recipientId
@@ -29,10 +31,10 @@ export class FacebookReply implements IBotReply {
         }
       }
     };
-    this.fbApi.sendMessage(response);
+    return this.fbApi.sendMessage(response);
   }
   
-  buttons(text: string, buttons: IBotReplyListItemAction[]): void {
+  buttons(text: string, buttons: IBotReplyListItemAction[]): Promise<any> {
     let response: IFbResponse = {
       recipient: {
         id: this.recipientId
@@ -48,7 +50,7 @@ export class FacebookReply implements IBotReply {
         }
       }
     };
-    this.fbApi.sendMessage(response);
+    return this.fbApi.sendMessage(response);
   }
 }
 

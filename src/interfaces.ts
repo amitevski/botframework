@@ -1,3 +1,4 @@
+import * as Promise from 'bluebird';
 
 export interface IBotUser {
   id: string;
@@ -70,9 +71,9 @@ export interface IBotRequest {
 }
 
 export interface IBotReply {
-  text(text: string): void;
-  buttons(text: string, buttons: IBotReplyListItemAction[]): void;
-  list(list: Array<IBotReplyListItem>): void;
+  text(text: string): Promise<any>;
+  buttons(text: string, buttons: IBotReplyListItemAction[]): Promise<any>;
+  list(list: Array<IBotReplyListItem>): Promise<any>;
 }
 
 export interface IDeliveryMessage {
