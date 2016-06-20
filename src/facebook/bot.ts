@@ -140,9 +140,12 @@ export class FacebookBot {
           this.botController.imageMessage(imageMessage, reply) || null;
           break;
         case FB_ATTACHMENT_TYPE.LOCATION:
-          let location = {
+          let location: IBotRequest = {
             user, location: {coordinates: attachment.payload.coordinates}, type: BOT_REQUEST_TYPE.FACEBOOK
           };
+          if (attachment.title) {
+            location.location.title = attachment.title;
+          }
           (this.botController.locationMessage) ? this.botController.locationMessage(location, reply) : null;
           break;
         case FB_ATTACHMENT_TYPE.FALLBACK:

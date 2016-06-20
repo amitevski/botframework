@@ -12,6 +12,7 @@ class DummyController implements IBotController {
     imageMessage: 0,
     linkMessage: 0,
     locationMessage: 0,
+    location: {},
     delivered: 0,
     catchAll: 0,
   }
@@ -20,7 +21,7 @@ class DummyController implements IBotController {
   textMessage(msg: IBotRequest, reply: IBotReply) {console.log('got new textMessage'); this.cc.textMessage++;}
   imageMessage(image: IBotRequest, reply: IBotReply) {console.log('got new imageMessage'); this.cc.imageMessage++;}
   linkMessage(msg: IBotRequest, reply: IBotReply) {console.log('got linkMessage'); this.cc.linkMessage++;}
-  locationMessage(msg: IBotRequest, reply: IBotReply) {console.log('got locationMessage'); this.cc.locationMessage++;}
+  locationMessage(msg: IBotRequest, reply: IBotReply) {console.log('got locationMessage'); this.cc.locationMessage++; this.cc.location = msg.location;}
   delivered(msg: IBotRequest, reply: IBotReply) {console.log('got delivered'); this.cc.delivered++;}
   catchAll(msg: IBotRequest, reply: IBotReply) {console.log('got catchAll'); this.cc.catchAll++;}
 }
@@ -63,9 +64,18 @@ describe('FacebookBot', () => {
             expect(ctrl.cc.imageMessage).to.eql(1);
             expect(ctrl.cc.locationMessage).to.eql(1);
             done();
-          })
+          });
+           
           // just console.log testing for now :(
           // if anyone knows a good mocking library for typescript youre welcome :)
+        });
+
+        it('should get location title', (done) => {
+            bot.receiveMessage(fakeMessageMixed())
+            .then( dispatchResults => {
+              expect(ctrl.cc.location['title']).to.eql(`Aco's Location`);
+              done();
+            });
         });
         
     });

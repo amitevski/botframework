@@ -26,6 +26,7 @@ export interface ICoordinates {
   long: number;
 }
 export interface ILocation {
+  title?: string;
   coordinates: ICoordinates;
 }
 
