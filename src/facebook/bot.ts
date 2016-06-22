@@ -139,6 +139,20 @@ export class FacebookBot {
           };
           this.botController.imageMessage(imageMessage, reply) || null;
           break;
+        case FB_ATTACHMENT_TYPE.AUDIO:
+          let audioMessage = {
+            user, link: {url: attachment.payload.url},
+            type: BOT_REQUEST_TYPE.FACEBOOK
+          };
+          this.botController.audioMessage(audioMessage, reply) || null;
+          break;
+        case FB_ATTACHMENT_TYPE.VIDEO:
+          let videoMessage = {
+            user, link: {url: attachment.payload.url},
+            type: BOT_REQUEST_TYPE.FACEBOOK
+          };
+          this.botController.videoMessage(videoMessage, reply) || null;
+          break;
         case FB_ATTACHMENT_TYPE.LOCATION:
           let location: IBotRequest = {
             user, location: {coordinates: attachment.payload.coordinates}, type: BOT_REQUEST_TYPE.FACEBOOK

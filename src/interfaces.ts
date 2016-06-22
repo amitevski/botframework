@@ -93,6 +93,8 @@ export interface IBotController {
   postback?(request: IBotRequest, reply: IBotReply): void;
   textMessage?(request: IBotRequest, reply: IBotReply): void;
   imageMessage?(request: IBotRequest, reply: IBotReply): void;
+  audioMessage?(request: IBotRequest, reply: IBotReply): void;
+  videoMessage?(request: IBotRequest, reply: IBotReply): void;
   linkMessage?(request: IBotRequest, reply: IBotReply): void;
   locationMessage?(request: IBotRequest, reply: IBotReply): void;
   delivered?(request: IBotRequest, reply: IBotReply): void;
