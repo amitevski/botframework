@@ -1,6 +1,6 @@
 {
   "name": "botframework",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Framework for messaging bots",
   "main": "./dist/es5/src/bot.js",
   "typings": "./dist/es5/src/interfaces.d.ts",
