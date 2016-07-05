@@ -28,15 +28,10 @@ export class FacebookServer {
       {
         url: `${BASE_API}/${this.settings.fb.page_id}/thread_settings?access_token=${this.settings.fb.access_token}`,
         body: {
-          setting_type:"call_to_actions",
-          thread_state:"new_thread",
-          call_to_actions:[
-            {
-              message:{
-                text
-              }
-            }
-          ]
+          setting_type:"greeting",
+          greeting: {
+            text
+          }
         },
         json: true
       }, (err, res, body) => {
