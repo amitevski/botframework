@@ -37,7 +37,7 @@ var bf = require('../');
 var bot = new bf.Bot({
   fb: {
     page_id: <your facebook page id>,
-    verify_id: <your verify id>,
+    verify_token: <your verify id>,
     port: 3000,
     callback_path: '/facebook/receive',
     access_token: <access_token from facebook>
